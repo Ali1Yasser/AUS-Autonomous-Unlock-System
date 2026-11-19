@@ -15,8 +15,21 @@ def _text(frame, text, y, color=config.WHITE):
     cv2.putText(frame, text, (20, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
 
 
+def _footer(frame):
+    h, w = frame.shape[:2]
+    bar_h = 34
+    overlay = frame.copy()
+    cv2.rectangle(overlay, (0, h - bar_h), (w, h), (0, 0, 0), -1)
+    cv2.addWeighted(overlay, 0.55, frame, 0.45, 0, frame)   # semi-transparent dark bar
+    cv2.putText(frame, "Quit: Q   |   Reset: R", (15, h - 11),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, config.WHITE, 2)
+
+
 def draw(frame, state, conditions_ok, hint, now):
     """Draws the whole overlay on a (already mirrored) frame."""
+    _footer(frame)
+
+    
     if state.unlocked:
         _banner(frame, "UNLOCKED", config.GREEN)
         return
